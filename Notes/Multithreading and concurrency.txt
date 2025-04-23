@@ -1,0 +1,488 @@
+Multithreading and concurrency :
+
+Process: A process is a single instance of a particular program which has self contained execution units like threads which perform tasks concurrently. The process run on it's own set of CPU memory space and time I/O devices to perform execution.
+
+Note : Monolithic application typically spawn one process with all it's threads/tasks coupled tightly together as single unit or single process. Any issue within that process could bring down the whole application /Program. 
+
+Note : Microservice application typically spawn multiple process to carry multiple different services. Where issue with a particular process doesn't impact the whole application functionality.
+
+Threads : A thread is like a light weight process. A thread exist within the process to execute a given task and share the resources of process but run independently as concurrently or parallelly.
+
+
+Thread object :
+
+Each and every threads are associated with the instance of Thread class. There are two strategies to create a Thread objects to create a concurrent application. 
+
+*  Directly creating an instance of Thread class to initiate an asynchronous task.
+
+*  Abstract the Thread management from the reset of your application. Passing an application's task to executor.
+___________________________________________________________________________________________________________________
+
+Defining and starting a thread
+------------------------------
+
+* This lesson describes how to define and start a thread. 
+
+Two ways to create and start a threads . 
+
+--> Implementing runnable interface on base class. 
+
+Example snippet :
+
+public class Sample implements Runnable{
+
+//Providing implementation for run() abstract method
+
+   Public void run()
+   {
+    System.out.println("Running on new thread"); 
+   }
+
+   public static void main(String[] arg){
+   new Thread(new Sample()).start();
+   }
+
+}
+
+Explanation : Here we are implementing Runnable interface on base class. Then passed the base class instance into the Thread class object and called start() method to start a new thread. 
+
+This is the most easiest and flexible way to initiate a new Thread. 
+
+
+--> Extending Thread class itself to base class.
+
+Example snippet : 
+
+public class sample extends Thread {
+
+  @Override
+  public void run(){
+  System.out.println("Running on new Thread");
+  }
+
+public static void main(String[] arg){
+  new Sample().start();
+  }
+}
+
+Explanation : The base class extends Thread and overrides run() method then called start() method vie it's instance. This may appear more straight forward but it's not flexible to use because it's tired to Thread class. 
+___________________________________________________________________________________________________________________
+
+Pausing exception with Sleep
+----------------------------
+
+We can leverage a static method from Thread class called sleep(). There are two overloaded versions are there. one take millisecond interval and other take milli, nano second interval(Thread.sleep()).
+
+If there's a need to pause a particular thread execution, a programmer needs to call Thread.sleep(4000) method by specifying the time interval in milliseconds. This invocation will result in pausing the current thread which avail the CPU time for other threads. The paused thread will begin it's execution post specified intervals. 
+
+Note : Thread.sleep() throws Interrupted exception, so the caller thread should handle it gracefully. 
+
+___________________________________________________________________________________________________________________
+
+Interrupts 
+----------
+
+Interrupt is a mechanism in java multithreading environment. Basically interrupting means a particular thread sending an interrupting signal to another thread. The interrupted thread should stop what ever it's doing and act according to interruption signal. 
+
+Also, the thread to be interrupted should make adjustment to support interruption. 
+
+How does it works. 
+
+A subjective thread will be called using interrupted method like subjectiveThread.interrupt(). If subjective thread is not running any blocking methods it should actively check whether it got interruption signal or not using a static method call like Thread.interrupted(). This will return a Boolean value and also reset the interrupt flag status to default false. The non-static isInterrupted method, which is used by one thread to query the interrupt status of another, does not change the interrupt status flag. 
+
+When an interruption occurs in a blocking method, it triggers an InterruptedException, and the interrupt flag is cleared (set to default, false).
+
+Interrupting threads revolves around:
+
+Interrupting the current or another thread by setting the interrupt flag.
+Checking the interrupt flag for the current or another thread.
+Handling the flag (clearing it automatically during an InterruptedException or manually).
+In short, it's about managing and responding to the interrupt flag.
+
+___________________________________________________________________________________________________________________
+
+Join
+-----
+
+This is a non-static method meant to be called on thread object if a current thread has to wait until the targeted thread completes it's execution and resume it's execution. 
+
+You might wonder when we call the join() method on targeted thread object from the current thread then how they are related each other how current thread senses that it should wait for target thread completion and resume and vise versa. There's an internal event occur when join() method is called on targeted object. The Java internal mechanism will sync those threads to make a relationship so current thread will be put in hold and targeted thread would notify the current thread about completion so that I'll resume it's execution. This is how it's done. 
+
+To have deeper understanding I should cover Synchronization topic to have grasp of thread relationships to manage,  coordinating and sharing their resources for orderly execution.
+
+___________________________________________________________________________________________________________________
+
+The simple thread example
+--------------------------
+
+This class consist 3 parts. First one is a static method which print the message in a specific format. Then the static class which implement Runnable interface and provide implementation for the same and gonna run on separate thread. Then a main method where we initiate a new thread then actively check whether the new thread is still alive or not based on the alive and patience conditions, when the given condition fails an interruption will be passed to the new thread. As it's a blocking thread and still alive, this will end up triggering an exception and that will be caught and custom message will be printed. Other wise the main wait until new thread completion and then get terminate. 
+
+___________________________________________________________________________________________________________________
+
+Synchronization
+---------------
+
+Why ?
+
+Threads communicates each other by sharing access to fields and object reference fields. This form of communications introduce two possible error scenarios. 
+
+* Thread interference 
+
+* Memory consistency error
+
+The tool need to prevent these errors is Synchronization. 
+
+Side effects ?
+
+By implementing synchronization to a shared resource, we are effectively limiting the accessibility at a time for threads. If the accessible limit exceeded by the inbound threads, the threads contention take place. Due to  threads trying to access the shared resource than allowed limit result in delay thread execution or suspension of thread execution in worst case. Thread starvation or livelock are a form of Thread contention. 
+
+___________________________________________________________________________________________________________________
+
+Thread interference
+-------------------
+
+This piece of session demonstrates how the thread interference event take place.
+
+Consider a class below
+
+class Counter {
+    private int c = 0;
+
+    public void increment() {
+        c++;
+    }
+
+    public void decrement() {
+        c--;
+    }
+
+    public int value() {
+        return c;
+    }
+
+}
+
+When a single instance of Counter class invokes different operations on the same data (c) from different threads "A" and "B". 
+
+The simple increment and decrement operations are decomposed into sequence of steps like demonstrated below. 
+
+C++ Thread(A)                                   c-- Thread(B)
+
+Retrieve value of c                             Retrieve value of c
+Increment by +1                                 Increment by -1
+Re-assign value back to c                       Re-assign value back to c
+
+
+As the threads execution take place concurrently, either A or B start execution first and modify the result and of those result will be lost results in unpredictable results. 
+
+First Thread A increment c by 1 and reassign the value back to and then Thread b will set c value as -1. Because both threads will retrieve c's default value.
+___________________________________________________________________________________________________________________
+
+Memory consistency error
+------------------------
+A memory consistency error happens when different threads see different values for the same data, causing unpredictable results. This occurs when threads aren't properly synchronized, leading to confusion or mistakes in the program.
+
+For example  
+
+int counter = 0;
+The counter field is shared between two threads, A and B. Suppose thread A increments counter:
+
+counter++;
+Then, shortly afterwards, thread B prints out counter:
+
+System.out.println(counter);
+If the two statements had been executed in the same thread, it would be safe to assume that the value printed out would be "1". But if the two statements are executed in separate threads, the value printed out might well be "0", because there's no guarantee that thread A's change to counter will be visible to thread B — unless the programmer has established a happens-before relationship between these two statements.
+
+___________________________________________________________________________________________________________________
+
+Synchronized Methods
+--------------------
+
+To make a method synchronized, simply add the synchronized keyword to its declaration:
+
+public class SynchronizedCounter {
+    private int c = 0;
+
+    public synchronized void increment() {
+        c++;
+    }
+
+    public synchronized void decrement() {
+        c--;
+    }
+
+    public synchronized int value() {
+        return c;
+    }
+}
+
+My observation:
+
+The instance variable methods of the above class are intended to be read by two or more Threads. Without synchronization a threads interference and memory consistency error would take place. A keyword synchronized needs to be defined into the methods which retrieves the field values. Then the above possible errors won't occur. 
+
+All threads holding reference to the same object has to read or write the data one by one. If one thread is accessing the instance currently rest threads will be suspended temporarily and released one after other in queue basis. This is build the happens before relationship among threads. 
+
+Then constructors can't be synchronized ?
+
+Synchronizing a constructor doesn't make sense because each thread creates a unique instance of the object, and only the thread creating the object has access to it during construction. Since no other thread can access the instance during creation, synchronization isn't needed.
+
+Then final fields are not subjective to modify. So they can't be synchronized and can be retrieved using non-synchronized methods. 
+
+___________________________________________________________________________________________________________________
+
+Intrinsic Locks and Synchronization
+-----------------------------------    
+
+Intrinsic Locks: Every object has an intrinsic lock that a thread must acquire to access or modify its fields, ensuring exclusive access and memory consistency.
+
+Synchronized Methods: A thread automatically acquires the object's intrinsic lock when invoking a synchronized method and releases it when the method completes.
+
+Synchronized Statements: These allow finer control over synchronization by specifying the lock object for specific sections of code, improving concurrency.
+
+Reentrant Synchronization: Allows a thread to acquire the same lock multiple times without blocking itself, making nested synchronized method calls safe.
+
+___________________________________________________________________________________________________________________
+
+Atomic Access:
+
+Use volatile "Key word" for simple reads across threads.
+
+Use Atomic for read and write operations requiring atomicity and thread safety.
+___________________________________________________________________________________________________________________
+
+Liveness
+--------
+
+An ability for a concurrent application to execute in a timely manner know as liveness.
+
+Most common liveness problems:
+
+* Deadlock
+
+* Starvation
+
+* Live lock
+___________________________________________________________________________________________________________________
+
+Deadlock
+--------
+
+* Deadlock is an situation both threads 1 & 2 hold one lock (instance1 or instance2) and wait for the other to release, which never happens, causing an infinite deadlock. 
+
+Starvation
+----------
+
+* Starvation is a situation when a greedy thread frequently holds the intrinsic lock for a long time, blocking other threads indefinitely from accessing the shared resource.
+
+Livelock
+--------
+
+A thread often acts in response to the action of another thread. If the other thread's action is also a response to the action of another thread, then livelock may result. As with deadlock, livelocked threads are unable to make further progress. However, the threads are not blocked — they are simply too busy responding to each other to resume work. 
+
+Conclusion :
+
+Deadlock and livelock are unrecoverable, while starvation causes long delays but can eventually recover if the blocking conditions change.
+
+Starvation degrades performance, while deadlock and livelock completely halt application progress.
+
+___________________________________________________________________________________________________________________
+
+Immutable objects
+-----------------
+
+Immutable objects cannot change state, making them thread-safe and free from corruption or inconsistency. While object creation may seem costly, it improves reliability, reduces synchronization needs, and offsets performance overhead.
+___________________________________________________________________________________________________________________
+
+Guarded blocks
+--------------
+
+* Guarded blocks prevent premature execution by waiting for a specific condition.
+
+* They avoid busy-waiting by using wait() inside a loop to continually recheck the condition.
+
+* Threads must hold the object's intrinsic lock to call wait() and notify()/notifyAll().
+
+* notify()/notifyAll() signal threads that the condition might have changed.
+
+* This approach is effectively used in the producer-consumer pattern to synchronize shared data.
+
+___________________________________________________________________________________________________________________
+
+High Level Concurrency Objects 
+------------------------------
+
+Introduction:
+-------------
+
+* So, far we have covered low level API's suitable for performing basic level multitasking which has been a part of Java sine very beginning. Higher level API's are need to perform more advanced tasks. 
+
+* In this lesson we are going to focus on Higher level API's introduced on Java platform 5.0 update. The implementations are available on Java.util.Concurrent package suitable for building large scale concurrent applications. 
+
+Essential topics and their purpose
+----------------------------------
+
+--> Locking objects - locking idioms suitable to simplify concurrent application. 
+
+--> Executors - A higher level API used to launching and managing Threads suitable for large scale concurrent application. 
+
+--> Concurrent collection framework - Built-in framework used to store and manage large collection without synchronization.  
+
+--> Atomic variables - Leveraging this API reduces the occurrence of memory consistency errors. Atomic variables make data visible to all threads. 
+
+___________________________________________________________________________________________________________________
+
+
+Locking objects
+---------------
+
+* Explicit Locking: Uses Lock objects instead of synchronized intrinsic locks.
+
+* Simultaneous Lock Attempts: tryLock() is used to acquire both instance locks (for Gaston and Alphonse) without 
+blocking.
+
+* Deadlock Avoidance: If both locks aren't acquired, any acquired lock is released to prevent deadlock.
+
+* Continuous Checking: An infinite loop continuously retries the process, ensuring that threads eventually succeed without interference.
+
+* Safe Concurrency: This method allows shared instances to interact safely in a concurrent environment.
+
+In short, this lesson demonstrates using explicit lock handling with the Lock interface and its methods instead of implicit locks provided by synchronized code.
+
+___________________________________________________________________________________________________________________
+
+Executors:
+---------
+
+* So far we covered basic thread operation which suitable for smaller scale applications. In large scale applications it make sense to separate thread management and creation from reset of application. We following sub section will describe the executors in detail. 
+
+1. Executor interface - define three types of executors object types. 
+
+2. Thread pools - Executor implementations. 
+
+3. Fork/join - These features introduced on Java SE 7 edition to take advantages of multiple processors. 
+
+___________________________________________________________________________________________________________________
+
+Executor interface 
+------------------
+
+* Executor runs tasks (but doesn't manage thread lifecycle).
+
+* ExecutorService manages thread creation, execution, and lifecycle.
+
+* ScheduledExecutorService does everything ExecutorService does, plus scheduling tasks with delays or fixed intervals.
+
+Common available implementations for three Executors. 
+
+Executor:
+
+ExecutorService (implements Executor)
+ScheduledExecutorService (implements Executor)
+
+ExecutorService:
+
+ThreadPoolExecutor
+ForkJoinPool
+ScheduledThreadPoolExecutor (also implements ScheduledExecutorService)
+
+ScheduledExecutorService:
+
+ScheduledThreadPoolExecutor
+
+Summary of standard implementations:
+
+ThreadPoolExecutor
+ForkJoinPool
+ScheduledThreadPoolExecutor
+___________________________________________________________________________________________________________________
+
+Thread Pools
+------------
+
+* Most of the executors implementations in Java.util.concurrent uses Threadpools. These kind of threads does only task being assigned to them. They aren't tied to any specific tasks. Those worker threads will be reused by executor to perform tasks in queue. 
+
+* Advantages : If we create thread object for each and every tasks it will consume excessive CPU & memory which costly in terms of building large scale applications. 
+
+* One common type of thread pool is fixedThreadPool. When we create Executor thread pool , we specify the number of  pre determined threads to accomplish tasks. If assigned tasks exceeds the number of available worker thread, the pending tasks will wait on internal queue and executed sequentially by worker threads. 
+
+* A classic example to demonstrate fixedthreadpools. Consider an web-server applications where it send and receive HTTP request. If the application is designed to create new instance for every HTTP request, as increase in number of Thread object creation, the system resource will be fully exploit and the system will crash due to in sufficient resource to handle further requests. If fixed worker threads are created to handle the HTTP request, those incoming request may not executed immediately but can processed on queue order by worker threads with very unnoticeable delay probably on micro seconds as long the system sustains.
+
+* There are Factory method available for operating with ThreadPools. 
+
+Factory class (Static): Executors - Has factory methods
+
+Example methods which return ExecutorService :
+
+newSingleThreadPool - Will return ExecutorService. Create single worker thread.
+
+newFixedThreadPool - Create specified number of worker threads.
+
+newCachedThreadPool - Worker Threads creation can be adjusted by programmer dynamically. More suitable for short lived tasks. 
+
+newScheduledThreadPool a one example - Several factory methods are ScheduledExecutorService versions of the above executors.
+
+If none of the executors provided by the above factory methods meet your needs, constructing instances of java.util.concurrent.ThreadPoolExecutor or java.util.concurrent.ScheduledThreadPoolExecutor will give you additional options.
+
+___________________________________________________________________________________________________________________
+
+Fork/Join
+---------
+
+What is Fork / Join - It's an implementation of ExecutorService interface. 
+
+What is for - To take advantage of multiple processors and designed for tasks that can be broken down into pieces recursively. 
+
+What the ultimate outcome - To use the full power of processors to enhance your application performance. 
+
+___________________________________________________________________________________________________________________
+
+
+                                                     Completed multithreading!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

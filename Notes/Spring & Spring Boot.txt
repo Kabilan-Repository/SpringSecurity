@@ -1,0 +1,1904 @@
+Spring & Spring Boot
+--------------------                                                                                     
+
+Section 1 : Getting started - Master spring and spring boot
+
+This particular module covers installation and set up part before getting started with Spring framework.
+____________________________________________________________________________________________________________
+
+Section 2 : Getting started with java spring framework : Create Maven project
+
+Understanding the need for Java Spring Framework :
+------------------------------------------------
+
+* Before Spring & Spring boot, we wrote 1000 lines of code to set up necessary features for a production ready application. After the introduction of Spring framework the efforts reduced up to 70% and after Spring boot it comes down to 40% 
+ 
+Simply these frameworks automated manual efforts significantly in order to build applications. Developers can do more with less lines codes using Spring and Spring boot. 
+
+Some of the features of Spring framework were discussed on this session like Tight coupling, Loose coupling, Dependency injection, IOC container, Application context,  Spring Beans, Auto wiring , Component scan. 
+
+Getting Started with Spring Framework - 1: 
+-------------------------------------
+
+* Goal : Understand the core features of Spring Framework
+
+* Approach : Going to build an gaming application using modern Spring Approach. 
+
+* Why Spring ?
+
+* Understanding the terminologies associated with Spring like these Tight coupling, Loose coupling, Dependency injection, IOC container, Application context,  Spring Beans, Auto wiring , Component scan. 
+
+* So far he discussed about what are the things we're going to do with Spring framework. 
+
+* Learnt how to create a spring project from Spring initializr - start.spring.io.
+
+* The created Maven project downloaded as zip file and we've extracted and imported into Eclipse IDE.
+
+____________________________________________________________________________________________________________
+
+Section 3 : Getting started with java spring framework - 3 : Set up Java Gaming Application 
+-------------------------------------------------------------------------------------------
+
+* Iteration 1 : Tightly Coupled Java Code 
+
+  -->Written a simple Java class and ran it and called it as tightly coupled.
+
+What is Tight coupling ?
+
+--> Tight coupling means that two or more modules in an application are highly dependent on each other. When one module changes, the other must also be updated, making the system rigid and harder to maintain. This lack of flexibility can lead to higher development costs, reduced reusability, and difficulty in scaling the application.
+
+* Iteration 2 : Loose coupled Java code. 
+
+--> Defined an interface made other classes to implement the same which made the running games flexible without requiring code change for running every games. 
+
+What is loose coupling ?
+
+--> Loose coupling is a design principle that minimizes dependencies between modules, making a system more flexible, maintainable, and scalable. Instead of tightly binding components, it promotes interaction through well-defined interfaces, abstractions, or events. This can be achieved using techniques like dependency injection, event-driven architecture, and microservices. A centralized module for shared functionality is one approach, but loose coupling generally aims to allow modules to evolve independently without widespread code changes.
+
+Iteration 3 : Bringing in Spring Framework to make Java app loosely coupled. 
+
+--> Things discussed and covered.
+
+* Wiring of dependencies or injecting of dependencies. 
+
+--> Providing an object with a necessary dependencies like passing a dependencies to a constructor or method.  
+
+* Purpose of @Configuration annotation in Spring context. 
+
+--> It marks a class as source for bean definition, allowing the spring container to manager the beans defined within it. 
+
+* How to create @Bean inside @Configuration class. 
+
+--> Create a method and calling an @Bean annotation to create a Bean inside a @Configuration class. 
+
+* Role of AnnotationConfigApplicationContext() in Spring application ?
+
+--> Used to initialize a Spring context or container inside the JVM to manage a configuration class passed into it. 
+____________________________________________________________________________________________________________
+
+New Java-16 feature :
+
+record feature: How to use it ?
+
+Syntax - record Class name (Type param, Type param){}
+
+What it will does ?
+
+The record feature in Java creates an immutable class with fields, getters, a constructor, hashCode(), toString(), and equals() automatically. Instances are created like regular classes, and fields can be accessed via auto-generated getters. We could also create custom methods. 
+____________________________________________________________________________________________________________
+
+We could also give custom name to our Bean. 
+
+Syntax 
+
+@Bean(name = "name as String") 
+
+Note : Here name is not a variable it's a java fixed naming convention for defining custom name for a Bean. 
+____________________________________________________________________________________________________________
+
+How to create a Bean using existing Bean. 
+
+--> create a Bean and call the existing Bean like method call methodName() to utilize the same value for another Bean. 
+
+--> Create a Bean which accepts existing Beans as parameters. The parameter name should match the existing Bean method name. 
+___________________________________________________________________________________________________________
+
+Summarizing things learned in this piece of session :
+
+1. How to give custom name to a Bean.
+
+2. Different ways to call Beans from Spring context. (Using type name or Bean method name)
+
+3. How to create a Bean using existing Bean method like method calls() and Parameters
+____________________________________________________________________________________________________________
+
+Section 6 :
+
+Spring Question 
+
+Question 1: Spring Container vs Spring context vs IOC Container vs Application Context. 
+
+--> Spring container is default name and some other terminologies are Spring context , IOC(Inversion of control) container they are all are referring to same thing which takes configured classes as input and produce ready system. 
+
+There are 2 types of Spring container : 
+
+* Bean Factory - Basic Spring Container. 
+* Application context - Advance Spring container with enterprise specific features. 
+  -> Easy to use in web apps 
+  -> Easy internationalization
+  -> Easy integration with Spring AOP 
+
+  -> Application context is widely used Spring container.  
+
+Question 2: Java Bean vs Spring Bean VS POJO
+
+--> Java Bean is a class which adheres to 3 constrains.(No argument constructor)(Getter and Setters)(Implement serializable interface)
+
+--> Spring Bean : Objects managed by IOC Spring container. 
+
+--> POJO : Stands for (Plain old Java object). A regular java object with no constraints. 
+
+Question 3: How can I list all beans managed by Spring Framework ?
+
+--> By calling getBeanDefinitionName() and related methods from context instance to list them all. 
+
+Question 4: What if Multiple matching beans are available ?
+
+--If we are calling a Bean using Type reference the Spring will look for a Beans defined under configuration class and get the one returns the intended type. In case there are more than one Bean found with similar return type an exception would take place during run time. To resolve this issue we can assign priority for a Beans using two type of annotations like @Primary and @Qualifier("CustomName").
+
+@Primary - A Bean should be given preference when multiple candidates are qualified. 
+
+@Qualifier assign priority to bean which can be auto-wired. 
+
+For example if you have two Beans and on of those set as @Primary and another one as @Qualifier. Both are meant to be injected into a constructor. By default the primary bean will be injected by Spring but if a bean defined with Qualifier and that qualifier added as prefix to the respective parameter type, the Primary Bean will not be considered for auto-wired and Qualifier Bean will be injected. 
+
+@AutoWired 
+
+What it does? → Automatically injects dependencies in Spring.
+Where to use? → Fields, constructors (recommended), or setter methods.
+How does it choose dependencies?
+@Primary → Gives highest priority.
+@Qualifier("beanName") → Specifies the exact bean to use.
+When not to use? → When manually defining beans using @Bean.
+
+When to use which one ?
+
+ALWAYS think from the perspective of the class. 
+
+1. Just AutoWired : Give me (Preferred) Bean with @Primary
+2. @AutoWired + Qualifier : I only want to use specific thing 
+3. Important : @Qualifier has always has higher priority than @Primary if it used. 
+
+Question 5: Spring is managing objects and performing and auto-wiring.
+
+ * But aren't we writing the code to create objects ?
+
+ * How do we get Spring to create objects for us ?
+
+Auto instance creation can done using annotations @ComponentScan and @Component. 
+
+How to use them ?
+
+Define @Component on class which intended for instance by Spring. 
+
+Define @ComponemtScan("path of @Component") on the class where we are using application context. If @ComponentScan defined without path, it will automatically scan @Component within the same package.  
+
+Spring automates instance creation (Bean) auto-wire them and manage them inside an IOC container and reduce code verbosity.
+
+____________________________________________________________________________________________________________
+
+Section 7 :
+
+Created basic gaming app using Spring Frame work core features/ 
+
+* Creating application context 
+
+* Creating Configuration 
+
+* Creating Beans
+
+* Defined Qualifiers to auto wire / injecting them .
+
+* Retrieving Bean using Type.class or using Beans name. 
+
+* Setting Priority for Beans using @Primary to make a Bean as default. 
+
+____________________________________________________________________________________________________________
+
+Section 8 : 
+
+Types of Dependency injection :
+
+* Constructor based injection : Spring will automatically inject the dependencies even if @Autowired not         specified. 
+
+* Setter based injection : Should add @Autowired annotation for each setter. 
+
+* Field based injection using reflection Should add @Autowired annotation for each field.
+
+Which one should you use ?
+
+* The Spring teams suggested to use Constructor based injection as dependency are set automatically when an object is created!
+
+What is IOC means in Spring Framework ?
+
+* Stands for "Inversion of control". Without Spring the programmer wrote code for object creation and wire them to Bean manually. Using Spring Framework features like @ComponentScan and @Component automates an object creation and wiring them. So, the control shifted from programmer to Spring Framework, hence that's why it's called as "Inversion of Control". 
+__________________________________________________________________________________________________________________________
+
+Difference between @Bean and @Component ?
+
+When to use which one ?
+
+Heading                        @Component                                @Bean
+
+Where ?                  Can be used on any Java class           Typically used on methods in Spring Configuration classes
+
+
+Easy to use              Very easy. Just add an annotation       Yes- Method call or Method parameter
+
+Auto Wiring               Spring Framework                         You write bean creation code 
+
+Who creates Beans         Spring Framework                         You write bean creation code
+
+Recommended For         Instantiating Beans for your application    1. Custom Business Logic 
+                        Code : @Component                           2. Instantiating Beans for 3-rd-party libraries: @Bean
+
+____________________________________________________________________________________________________________
+
+Summery : 
+
+* How to let Spring Framework manage object creation and manage it's life cycle. Using @ComponentScan and @Component. 
+
+* Types of Dependency injection and Auto-Wiring. 
+
+* How and when to use @Primary and @Qualifier annotations. 
+
+____________________________________________________________________________________________________________
+
+Section 9 : Spring Framework Advance features 
+
+Lazy and Eager initialization of Spring Framework Beans
+-------------------------------------------------------
+
+--> By default, Spring follows eager initialization, where all beans are created at application startup.
+
+--> However, using @Lazy on a bean defers its initialization until it is explicitly requested.
+
+Example:
+
+* If Class B has a constructor that takes Class A as a parameter, both A and B will be initialized at startup (eager initialization).
+
+* Applying @Lazy to Class B ensures it is only instantiated when explicitly accessed (lazy initialization).
+
+Which one is recommended ?
+
+* Eager initialization recommended. 
+
+* Lazy initialization is not recommended and not often used. Can be used with @Component and @Bean
+
+  -> @Lazy can be used on Configuration class. All @Bean method defined within the @Configuration will be  Lazily initialized. 
+
+  -> Eager - Error's will be discovered during application start up
+ 
+  -> @Lazy - Error's will become run time error.
+
+------------------------------------------------------------------------------------------------------------
+
+Comparing Lazy initialization vs Eager initialization 
+-----------------------------------------------------
+
+Initialization time :
+
+-> @Lazy  Been initialized when it made use of in the application. 
+
+-> Eager initialization Beans will be initialized during application start up. 
+
+Default : 
+
+-> Eager initialization 
+
+-> @Lazy - Not a Default 
+
+Code snippet :
+
+-> @Lazy 
+
+-> Eager - Not require to specify anything
+
+What happens if there are errors in initializing : 
+
+-> @Lazy - Errors will result in runtime exception. 
+
+-> Eager - Errors will prevent application from start up. 
+
+Usage :
+
+-> @Lazy Rarely used 
+
+-> Eager - Very frequently used
+
+Memory consumption :
+
+-> @Lazy - Less(until bean is initialized)
+
+-> Eager - Load all bean on application start up consume memory.
+
+Recommended Scenario :
+
+-> @Lazy for Beans very rarely used in your application so memory consumption will be less. 
+
+-> Eager - Most of your beans. 
+
+------------------------------------------------------------------------------------------------------------
+
+Spring Bean Scopes
+------------------
+
+Singleton (Default) – When a @Component is defined without @Scope, Spring creates a single instance of the bean for the entire application context. Every time the bean is requested, the same instance (same hashcode) is returned.
+
+Prototype (@Scope("prototype")) – A new instance is created every time the bean is requested from the application context. Each retrieval gets a unique instance with a different hashcode.
+
+Java Singleton vs Spring Singleton
+----------------------------------
+
+-> Java Singleton - One object instance per JVM. 
+
+-> Spring Singleton - One Object instance per Spring IOC container.
+
+------------------------------------------------------------------------------------------------------------
+
+Prototype vs Singleton Bean Scope
+---------------------------------
+
+Instance :
+
+Prototype - Possible many instance per IOC container. 
+
+Singleton - One instance per IOC container.
+
+Beans :
+
+Prototype - New bean instance created every time the bean is referred to 
+
+Singleton - Same bean instance reused. 
+
+Default :
+
+Prototype - Not a default 
+
+Singleton - Default unless prototype explicitly specified. 
+
+Code Snippet :
+
+Prototype - @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+ 
+Singleton - @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON) or Default
+
+Usage : 
+
+Prototype - Rarely used. 
+
+Singleton - Very frequently used.
+
+Recommended Scenario :
+
+Prototype - Stateful beans - If application needs to hold user information prototype can be used to create unique objects to store user information. For these kind of scenarios prototype can be used.
+
+Singleton - Stateless beans - If you are creating stateless beans if they don't have any user information a generic and they can used across application then you just create one instance and use it across the application.
+------------------------------------------------------------------------------------------------------------
+
+Post-Construct and pre-destroy
+------------------------------
+
+@PostConstruct - This annotation will be used conjunction with methods. Only one method on class can be annotated with "Post Construct". The method annotated with Post Construct must be invoked even if the class does not request any resources to be injected. This make the Spring to call the method annotated with @PostConstruct before it put into Service. 
+
+@PreDestroy - The PreDestroy annotation is used on a method as acallback notification to signal that the instance is in theprocess of being removed by the container. The method annotatedwith PreDestroy is typically used to release resources that it has been holding. 
+
+------------------------------------------------------------------------------------------------------------
+
+Jakarta Contexts & Dependency Injection
+---------------------------------------
+
+* CDI - Jakarta Context & Dependency injection. 
+
+* CDI - It's a specification introduced to Java EE - 6 on 2009. 
+
+* CDI - Is a specification (interface ). Spring Framework implements CDI. 
+
+* Important Inject API Annotations :
+
+--> Below annotations are just an alternative for Spring Annotations. The alternative annotations are part of Jakarta CDI. We don't need to use but good to be aware. 
+
+-> Inject (Autowiring in Spring)
+
+-> Named (Component in Spring)
+
+-> Qualifier 
+
+-> Scope 
+
+-> Singleton 
+
+------------------------------------------------------------------------------------------------------------
+Skipped a module about XML configuration part because that's not used in modern applications. 
+
+------------------------------------------------------------------------------------------------------------
+
+Exploring Spring Framework stereotype annotation 
+------------------------------------------------
+
+@Component - Generic annotation applicable for any class. Base for all Spring Stereotype Annotations. 
+
+Specializations of @Component:
+
+-> @Service - Annotated class contains only Business logic. 
+
+-> @Controller - Annotated class which act as Controller on Web application. 
+
+-> @Repository - Annotated class communicates with databases. 
+
+What should I Use ?
+
+-> Recommended - Use the most specific annotation possible
+
+Why ?
+
+-> By using most specific stereotype annotation, you are giving more information to the Spring Framework about your intentions (What a class is going to do). 
+
+-> You can use AOP(Aspect oriented programming) at a later point to add additional behavior. 
+  
+  * Example : For @Repositery , Spring automatically wire in JDBC exception translation features. 
+
+------------------------------------------------------------------------------------------------------------
+
+Review of Important Spring Annotations:
+--------------------------------------
+
+@Configuration - Make a class as configuration file which is going to be put into IOC container 
+
+@ComponentScan - Annotated class will scan and hold the components inside a specified package or default package. 
+
+@Bean - Make a method eligible for Bean to managed by Spring framework.
+
+@Component - Makes a class eligible as Bean to be managed by Spring framework. 
+
+@Service - A stereoType annotation of @Component tell spring framework a class used for defining business logic. 
+
+@Controller -  A stereoType annotation of @Component tell spring framework a class act as controller. 
+
+@Repository -  A stereoType annotation of @Component tell spring framework a class communicates with Database
+
+@Primary - Gives first preference to a class @Component or a method@Bean when multiple candidates available for same types 
+
+@Qualifier - Makes a type qualify for @Autowiring. If used when @Primary presence , the qualifier will be given first pref.
+
+@Lazy - Defer initialization till explcit call 
+
+@Scope - Singleton(Default) or @Scope("prototype") if this used a unique instance will be returned for each call. 
+
+@PostConstruct - Method level annotation will invoke a method at application start up. 
+
+@PreDestroy - Method level annotation will inboke a method before application stuf-off. 
+
+CDI-Annotations
+
+@Named - An alternate annotation for @Component 
+
+@Inject - An alternate annotation for @AutoWired 
+
+------------------------------------------------------------------------------------------------------------
+
+Quick review of Important Spring concepts. 
+
+Dependency injection - Constructor, Field , Setter are sub types. 
+
+IOC Container - Manage Bean life cycle.
+
+IOC container another type - Bean factory - Basic Spring IOC container. 
+
+Application context - Advance Spring IOC container.
+
+Spring Beans - Objects managed by Spring.
+
+Auto Wiring - Process of wiring in dependencies for a Spring Bean. 
+
+____________________________________________________________________________________________________________
+
+Learning Maven with Spring and Spring Boot:
+------------------------------------------
+
+What's Maven ?
+
+* Apache Maven is a software project management and comprehension tool. Based on the concept of a project object model (POM), Maven can manage a project's build, reporting and documentation from a central piece of information.
+
+
+What is Pom.xml file ?
+
+* pom.xml acts as the centralized file where the programmer defines commands (dependencies, plugins, build configurations), and Maven executes them.
+
+ It’s the bridge between the programmer and Maven!
+
+------------------------------------------------------------------------------------------------------------
+
+Exploring Maven pom.xml file for Spring Boot
+--------------------------------------------
+
+* First responsibility of Maven is dependency management. 
+
+* Maven Dependencies - Libraries & Framework used in a Project. 
+
+Ex : Spring-boot-Starter, Spring-boot-Starter-test. 
+
+Why are there so many dependencies in the class path ?
+
+* Transitive dependencies - A Dependencies which the main dependencies dependent on will also be downloaded by Maven. 
+
+Difference between Spring Dependencies and Maven dependencies ?
+
+* Spring Dependencies - Dependencies inside a class. A Class required dependencies for auto wiring. 
+
+* Maven Dependencies - Frameworks & Libraries like things that we would need to build projects.
+
+Parent POM : Spring boot - Starter-Parent
+-----------------------------------------
+
+* Dependency management: spring-boot-dependencies - No need to specify the versions of Dependencies. 
+
+* Properties: java.version, plugin and their configurations.
+
+what I've learnt ?
+
+--> How to add dependency to POM.XML file.
+
+--> Understood the features that we inherit from Parent POM.
+
+Project name, Group ID , Artifact ID
+------------------------------------ 
+
+1. Group ID : Similar to Package name.
+
+2. artifact ID : Similar to Class name. 
+
+Why is it important ?
+
+ Once you create a dependency (a custom library or module), you can publish it to a Maven repository (either a local, private, or public repository like Maven Central).
+
+Other projects can then use your dependency by specifying its:
+
+Group ID
+Artifact ID
+Version
+in their pom.xml, and Maven will automatically download and manage it for them.
+
+This is how Maven enables code reuse across multiple projects!
+
+Executing Maven commands 
+------------------------
+
+Maven commands :
+
+help:effective-pom - Brings entire effective- POM.XML file hierarchy into console. 
+
+dependency:tree - Brings the entire dependency tree hierarchy. 
+
+Key Takeaway:
+
+* When ever if we face any problem with POM.XML file, we should look into the effective POM to resolve most of the issues. 
+
+* 3 Important things we define inside our POM.XML file - Project name , Group ID, Artifact ID.
+
+Exploring Maven build using Spring boot project
+-----------------------------------------------
+
+Maven Build Life cycle :
+
+1. Verify 
+
+2. Compile 
+
+3. Test 
+
+4. Packaging
+
+5. Integration test 
+
+6. Verify  
+
+7. Install 
+
+8. Deploy 
+
+* If we execute a single Maven command, it will follow the above mentioned sequence one after other.
+
+
+How does Maven works ?
+
+* Maven follows convention over configuration. 
+
+--> Predefined folder structure
+
+--> Almost all java project follow Maven structure. 
+
+Maven Central repository ?
+
+* The Dependency and Jar file we use for our Spring boot project will be downloaded by Maven from a centralized repository call "Maven repository". 
+
+Local Maven repository ?
+
+* Local Maven repository is out local storage location where Maven place the Jar files and dependencies downloaded from Central Maven repository. In short it's a local storage for dependencies and Jars which will be used by our Java project. 
+
+When you define a dependency in your pom.xml, Maven first checks:
+
+Your project's POM for directly defined dependencies.
+The parent POM(s) (if any) for inherited dependencies and plugin configurations.
+The Maven Super POM for default settings.
+Transitive dependencies (dependencies of your dependencies) and resolves them.
+The Effective POM shows the final, fully-resolved configuration, including:
+
+All dependencies (direct + transitive)
+Versions (inherited or explicitly defined)
+Group ID, Artifact ID
+Plugins and other inherited settings
+
+All parent POMs (like spring-boot-starter-parent and spring-boot-dependencies) act as default templates containing:
+
+Dependency versions (so you don’t need to specify them).
+Plugin configurations (for builds, tests, etc.).
+Default properties (like java.version).
+Your pom.xml refers to these parent POMs, and Maven inherits their settings automatically! 
+
+Important Maven commands
+------------------------
+
+* mvn --version 
+
+* mvn compile  - Compile source files 
+
+* mvn test-compile - compile test files 
+
+* mvn clean - clear the "target" folder 
+
+* mvn test - Runs unit test before it compile source and test files and then it will run tests. 
+
+* mvn package : Create jar 
+
+Seen how Spring Projects versioned. 
+
+
+
+____________________________________________________________________________________________________________
+
+Section 11 : Getting started with Spring Boot 
+---------------------------------------------
+
+World before Spring boot :
+
+* Define your Spring Configuration - Dependency management and versions on POM.xml file. 
+
+* Before Spring we need configure lot things manually like non- functional requirements. 
+
+  -> Logging 
+
+  -> Error Handling
+
+  -> Monitoring
+
+Setting up Spring project before Spring boot was not easy! Activity involves
+
+1. Dependency management (pom.xml)
+
+2. Define Web App configuration (web.xml)
+
+3. Manage Spring Beans (context.xml)
+
+4. Implement Non functional requirements (NFRs)
+
+The Developer should repeat this process for every new project. Typically take few days to set up for each project and countless hours to maintain. 
+
+In short, before Spring boot there were lot of manual efforts done by developer to make an application productions ready. This include manual configuration , NFRs implementations. 
+
+____________________________________________________________________________________________________________
+
+Section 12 : Create Spring boot project & Simple REST API using Spring Boot
+---------------------------------------------------------------------------
+
+What I've done to Create a Spring Boot Project ?
+
+--> Went to start.spring.io initializer. 
+
+--> Created a project by giving group ID and Artifact ID. 
+
+--> Added a Spring-boot-starter-web  dependency and generated a project. 
+
+--> Imported the project into IDE. 
+
+--> Ran a sample Java application.
+
+--> Observed it ran on embedded Apache Tomcat server on port:8080 and some Logs. 
+
+
+Build a Hello world API using Spring Boot:
+-----------------------------------------
+
+// Create course class 
+
+   @ Restcontroller
+// Create Course Controller class
+   |
+   |   @RequestMapping
+   |__ Create a No argument method named retrieveAllCourses() which return a List<Courses>
+
+What I've done in this step ?
+
+Created a Class called "Courses" with fields "ID", "Name", "Author". Then created an another class called CoursesController and annotated as @RestController and created method which returns a List<Courses> and annotated as "RequestMapping("/Courses"). Then ran a different class on Apache Tomcat server on port:8080. 
+Later hit the URL : http: //localhost:8080/Courses which returned a Courses details of different objects as JSON response on web Page. 
+
+Exploring Spring boot starter projects : 
+--------------------------------------
+
+* Spring boot starter projects are convenient dependency descriptors. 
+
+Let's you want to build a Web application or REST API, we typically need Dependencies like (Spring MVC, Spring, Tomcat, JSON). All these dependencies are predefined on spring-boot-starter-web. 
+
+Spring boot provides variety of starter projects defined with necessary dependencies for different use cases. 
+
+Examples : Spring Security, Spring JAP, Spring JDBC, Spring boot starter test etc.
+
+Depending on the use case we can use the right starter projects. 
+
+
+Understanding Spring boot Auto Configuration : 
+--------------------------------------------
+
+* Earlier we used to configure , Configuration class, Component Scan, Dispatcher Servlet, Data sources, JSON conversion. 
+
+How can i simplify things ?
+
+Auto configuration : Automated configuration for your APP. 
+
+Decided based on :
+
+      -> Which frameworks are in class path ?
+      -> What is the existing configuration(Default or Custom configuration) ?
+
+Spring boot starter web : What Autoconfigured here ?
+
+-> Dispatcherservlet 
+
+-> Embedded server
+
+-> Bean to JSON conversion
+
+-> Error logging. 
+
+If we ran the application, spring boot will manage all these action through autoconfiguration. 
+
+
+Spring Dev Tools : 
+
+* Spring-boot-devtools is a Dependency which we add to the POM.xml. 
+
+What it will do : We don't need to restart the server for every code changes we make. As soon as we save the code changes , spring will automatically restart the server and results can be visible just after browser refresh. 
+
+Notes : Change to POM.xml will not be taken care by Spring. The server has to be manually restarted. 
+
+Get production ready with Spring boot - Profiles
+-------------------------------------
+
+Questions I have ?
+
+Why application.properties ?
+  
+* The application. Properties file in a Spring Boot project (under src/main/resources) is used for configuring application settings, such as database connections, server ports, logging levels, and other properties. It allows easy externalization of configuration without modifying the source code.
+
+
+* Applications have different environments : Dev , QA, Stage, Prod
+
+* Different environments needs different configuration :
+
+  -> Different Databases 
+  -> Different Web Services
+
+* How can you provide different configuration for different environments ?
+
+  Using profiles: Environment specific profile configuration
+
+What are profiles ?
+
+* Profiles enable your to provide environmental specific configurations.
+
+Different logging levels supported by logging frameworks:
+
+-> Trace level            
+                       
+-> Debug level            
+                        
+-> Info level             
+                       
+-> Warning level         
+                      
+-> Error level           
+                      
+-> off - Turn off Logging
+
+We I've done ?
+
+* Created a different application properties for different environments like Dev & Prod. Configured one of them for example Dev on "applications. properties" as active profile like (spring.profiles.active = dev) and saved the changes. 
+
+
+* Ran application and observed the logs are printed at trace level. And vise versa for prod profile. 
+
+* Note : If no profiles are configured the applications uses default configuration. 
+
+* Note : When a profile is configured it will be given first priority. 
+
+* Note : When we configure a logging level for example "Trace" the subsequent level will be included while printing logs. If we choose Debug, it's subsequential hierarchy levels will be included. Same goes for all Logging levels and so on so forth..
+
+
+Get production ready with Spring boot - Configuration properties. 
+-------------------------------------
+
+@ConfigurationProperties() - Annotation used to mark a class to configure properties through the application.properties. 
+
+Syntax @ConfigurationProperties(prefix = "exampleName")
+
+Constrain : 
+
+-> The prefix name and property configuration name should be identical. 
+
+How to define properties on application. Properties ?
+
+-> (prefix name or property configuration name) . (attributename) = attribute value
+
+* Once the above set up completed, Spring will automatically configure those properties with the designated class annotated with @ConfigurationProperties during runtime. 
+
+Key takeaway : 
+
+* Configuration properties help us to externalize the application properties configuration separate from application source code. 
+
+* This process is a combination of Application (configuration properties) and (Profile configuration). 
+
+* We can also configuration properties for different environments. Based on the profile configuration type definition on application. properties, the properties will be configured with designated property class. 
+
+___________________________________________________________________________________________
+
+Get production ready - Embedded server
+--------------------------------------
+
+Embedded server make deployment process easy. Just install Java and build & run JAR file. 
+
+Spring-boot-starter-web includes number of servers such as Tomcat, jetty, undertow. 
+
+By default Tomcat server will be used to run our java applications. 
+
+___________________________________________________________________________________________
+
+Get Production ready - Actuator (Monitoring)
+-------------------------------
+
+* Dependency - spring-boot-starter-actuator has to be defined on Pom.xml file. 
+
+* application. properties has to be configured with endpoints
+
+   Syntax : management.endpoints.web.exposure.include=*
+
+* This syntax will expose all actuator metrics, which means gathering more information consumes more CPU consumption. 
+
+* To expose necessary endpoints, the syntax should be modified with appropriate values. 
+
+   Syntax : management.endpoints.web.exposure.include = Health, Metrics
+
+* Actuator - Monitor and managed your application in your production. 
+
+___________________________________________________________________________________________
+
+Understanding Spring boot vs Spring MVC vs Spring
+-------------------------------------------------
+
+Spring Framework - All about Dependency injection (@Configuration ,@Component Scan, @Component, @Autowired etc)
+
+Dependency injection is not enough, we need more framework to build application. 
+
+Spring MVC (Spring module) : Simplify building Web application and REST API
+ 
+ -> @Controller @RestConrroller @RequestMapping("/example")
+
+Spring Boot (Spring project): Build production ready application quickly. 
+ 
+ -> Starter projects - Make it easy to build variety of applications
+
+ -> Auto Configuration - Eliminate manual configuration to setup Spring, Spring MVC and other frameworks!
+
+ -> Enable non functional requirements (NFRs).
+
+   Actuators, Embedded server, Logging, Profiles and configuration properties. 
+___________________________________________________________________________________________
+
+Getting Started with JPA and Hibernet with Spring and Spring Boot
+-----------------------------------------------------------------
+
+00:04 11-03-2025
+
+Getting Started with JPA and Hibernate
+--------------------------------------
+
+Learning JPA and Hibernate - Approach 
+
+Create a Spring boot project with H2 data base. 
+
+Create a Course table 
+
+Use Spring JDBC to play with COURSE TABLE
+
+Use Spring JPA and Hibernate to play with COUESE TABLE. 
+
+Use Spring Data JPA to play with COURSE TABLE. 
+
+___________________________________________________________________________________________
+
+Created a Spring boot project to work with Spring Data, JPA & Hibernate, Spring JDBC. 
+
+Dependency added :
+
+-> Spring boot starter web
+-> Spring JDBC 
+-> Spring JPA & Hibernate
+-> H2 Database 
+___________________________________________________________________________________________
+
+Launching H2 Database Console and Creating table 
+------------------------------------------------
+
+Configured H2 Console connection :
+
+-> Defined "spring.h2.console.enabled=true" on application. properties file. 
+
+-> Defined "spring.datasource.url=jdbc:h2:mem:testdb" on application. properties file.
+
+-> Launched up h2 console on browser by hitting URL - http://localhost:8080/h2-console
+
+-> Set default URL configured as data-source on application. properties.
+
+Created a Table :
+
+-> Created a schema. SQL file and wrote code for table creation using following syntax. 
+
+ syntax :
+
+   create table table name
+{
+
+ id bigint not null,
+ name varchar(255) not null,
+ author varchar(255) not null,
+ primary key(if)
+           
+};
+
+Note : In data base , long values should be defined as [bigint] and Strings should be [varchar(max length for char)] , then primary key should be defined which is important to identify a particular row on a table. Each row has unique Key. 
+
+-> Saved changes and started the application. 
+
+-> Reconnected the database and found the COURSE Table created and ready to be queried. 
+
+Quick summery : Established database connection and created table.
+___________________________________________________________________________________________
+
+Getting started with Spring JDBC :
+--------------------------------
+
+-> Wrote an SQL query to insert value , display rows , delete rows using primary key on SQL table. 
+
+Difference between JDBC and Spring JDBC :
+
+JDBC - We write lot of SQL and Java Code. 
+
+Spring JDBC - We write lot of SQL code but less java code. 
+
+
+Inserting hardcoded data using Spring JDBC :
+------------------------------------------
+
+-> Created a Class named it as CourseJdbcRepository and annotated with @Repository as it's interacting with database and it's a component. 
+
+-> Created a JdbcTemplate field and @Autowired it. Then wrote a query enclosed with Textbook String style Syntax: """  """ ;
+
+-> Created a method named it as insert() and called update method from JdbcTemplate and passed the query. 
+
+-> Created a Class and named it as CourseJdbcCommandLineRunner and implements CommandLineRunner and implemented the run() method and called the CourseJdbcRepository instance() method . Purpose : This Bean(Class) will executed right after the application launchment so Run method will be invoked which invokes the insert() finally the Query updated into database.
+
+-> Created a Course Class with Course fields and getter method. 
+
+-> Modified the Query constant fields with ? ? ? as parameter substitutes. 
+
+-> Modified the insert method to accept Course method. 
+
+-> Passed the Constant and passed the Course parameter in order like ID, name, Author. 
+
+-> Done the same for Delete method and ran it inside from run() method from CourseJdbcCommandLineRunner() method. 
+
+-> Created Selevet query constant and assigned a query. 
+
+-> Created a method which return Course and named it as findById(long id).
+
+-> Parameter passed (Constant, new BeanPropertyRowMapper<>(Course.class),if).
+
+-> Called findById method and printed the retrieved property to console. 
+
+NOTE : class - new BeanPropertyRowMapper<>(Course.class) type fetch the requested detail from database and mape to the class which hold the identical property in same order as database and returned it as object.
+___________________________________________________________________________________________
+
+Getting started with JPA and Entity Manager
+-------------------------------------------
+
+Annotations :
+
+@Entiry - A class annotated as will me mapped to the Database table. 
+
+@Id - To mark a field as Primary Key for SQL. 
+
+@PersistanceContext - An alternate for @Autowired. This one more appropriate to define on a class interact with database. 
+
+@Transactional - This annotation type should be defined with @Repository and where a class queries database. 
+
+How JPA simplified data base interaction than Spring JDBC ?
+
+-> Module Course class annotated as @Entity to map it with Database table. 
+
+-> Insert, Delete, findById but unlike Spring JDBC we didn't passed query constants, instead we've done these actions via Course class which is already mapped with table. Just by passing Course.Class along with Id we are able to accomplish the same operation. 
+
+This reduced the lines of code we wrote for queries and additional lines for mapping table back to Course class using "new BeanPropertyRowMapping<>(Course.class)".
+
+-> Configured this "spring.jpa.show-sql=true" on application. properties. This will show the SQL Queries fired on Console. 
+___________________________________________________________________________________________
+
+Exploring the magic of JPA :
+--------------------------
+JDBC 
+
+* Write a lot of SQL Queries
+
+* And write a lot of Java code
+
+
+Spring JDBC
+
+* Write a lot of SQL Queries 
+
+* But Lesser Java Code 
+
+
+JPA 
+
+* Do NOT Worry about queries
+
+* Just Map Entities to Table!
+
+* Make Use Entity manager to manager Operations. 
+
+* The advantage of JPA. Don't need to write SQL queries. 
+___________________________________________________________________________________________
+
+Getting started with Spring Data JPA 
+------------------------------------
+
+* Created an interface and extended "JpaRepository<T,D>" and passed Course(@Entity) and Long(ID Type) as Type parameter into the JpaRepository<T,D> Generic interface. 
+
+* Then @Autowired and defined CourseSpringDataJpaRepository on CourseJPACommandLineRunner class.
+
+* Just called CURD operation methods like save, findById, deleteById methods and passed params and achieved the same outcome. 
+
+* Advantage of Spring Data JPA - All manual efforts from Spring JPA are pre-defined and made us accomplish database operation just using method calls and passing params. Ex - No SQL queries, No manual implementations for CURD operation methods. 
+___________________________________________________________________________________________
+
+Hibernate vs JPA 
+----------------
+
+JPA - Is a an API . It Defines a specification. Ex : How to define @Entities & How to map attributes (@Columns). How to make use of EntiryManager(Interface)
+
+Hibernate - It's a popular implementation for JPA. Another implementations like Toplink as example. 
+
+In our code always using JPA annotations are recommended. 
+
+___________________________________________________________________________________________
+
+
+To-Do web application building : 
+------------------------------
+
+Step 00 : 
+
+Notes : Introduction of building web application. An overview of To-Do web application. 
+
+Key   : None
+
+
+Step 01 :
+
+Notes : Created a Spring-Boot project from Spring initializer with Spring-Starter-web & Dev-Tools dependencies. 
+
+Key   : None
+
+  
+Step 02 :
+
+Notes : Overview of Spring Boot project files.
+
+Key   : Context Launcher, Application . Properties, POM . XML
+
+
+Step 03 :
+
+Notes : Created a controller class for printing a String to browser page. 
+
+Key  : @Controller -To mark a class handles HTTP request and response. @ResponseBody - Mark a method which return response. 
+
+       @RequestMapping("/URL name") to define URL Endpoint. 
+
+Step 04 :
+
+Notes : Created another end point method. Created a String Buffer and appended HTML code and sent as response to browse.
+
+Key   : None 
+
+
+Step 05 :
+
+Notes : Created JSP file for View [To isolate html code]. Removed the @ResponseBody. Modified the return statement string 
+        match JSP file name["say Hello"]. Configured the view-resolver on application. properties. Added a tomcat 
+        dependency on POM.XML file to run JSP on Tomcat server. 
+
+        Spring will resolve the view path by constructing directory using prefix & filename & Suffix from   
+        application. Properties => spring.mvc.view.prefix=/WEB-INF/jsp/sayHello.jsp
+
+Key   : View resolver configuration on application. properties -
+   
+        prefix : spring.mvc.view.prefix=/WEB-INF/jsp/
+        suffix : spring.mvc.view.suffix=.jsp
+
+        Tomcat Dependency to run JSP file - 
+
+        <dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+        Removed @ResponseBody to avoid returning same String 
+
+
+Step 06 :
+
+Notes : Created a login controller view page & controller page
+
+Key   : None
+
+
+Step 07 :
+
+Notes : High level overview of Web Application life Cycle. The Http request & response flow on browser. 
+
+Key   : 🌐 Browser → 📨 HTTP Request → 🔄 Processing (🖥️ Server → 🛠️ Application) → 📤 HTTP Response (📄 HTML Code) → 
+        🌐 Browser Render
+
+
+Step 08 :
+
+Notes : Added [?name="value"] request parameter to the HTTP Request URL. Made the Login Controller method to receive the 
+        RequestParam and added another Type & parameter ModelMap then called put method and passed key and http params as 
+        key value pair. This way Request params passed via URL will be displayed on JSP page.  
+
+Key   : @RequestParam - Receive Request parameter sent via Http-Request. ModelMap - A Model TYPE that dispatch Request  
+        parameter to view page [UI].
+
+
+Step 09 : 
+
+Notes : High-level Overview of logging framework in Spring Boot. We can configure logging level for specific package alone. 
+
+Key   : logging. Level .Root package path , Example - logging.level.com.in28minutes.springboot.myfirstwebapp=debug 
+
+
+Step 10 :
+
+Notes : Model 1 Architecture - Where all application code maintained inside a JSP file made development difficult. 
+        Model 2 Architecture - Follows MVC - Front controller design patter for web application building. 
+
+Key   : None
+
+
+Step 11 :
+
+Notes : Created a html login form and saw difference between GET and POST method. 
+
+Key   : GET - Expose form data to URL 
+        POST - Hide form data from URL
+
+
+Step 12 :
+
+Notes : Created a welcome JSP page. Created another controller Request-Mapping method(value = "/login",RequestMethod.POST)  
+        for POST request which return Welcome jsp page. Then implemented Request parameter to fetch the user credentials .
+        and ModelMap to sent back to UI.
+
+Key   : @RequestMapping (value = "/login" , method = RequestMethod.GET & RequestMethod.POST) - To handle GET and POST  
+        request separately.
+
+Step 13 : 
+
+Notes : Created a static Authentication Service for user credential verification. Wrote a logic to revert the user back
+        to login page if user failed on Authentication. Other Wise rout to welcome page.  
+
+Key   : None
+
+
+Step 14 : To-do
+
+Notes : Created a To-Do class and To-Do Service Class.
+
+Key   : None
+
+
+Step 15 :
+
+Notes : Created a To-Do Controller class and made a @RequestMapping("login-todos") which accept a ModelMap as parameter. 
+        Created a field for ToDoService and constructor for Spring to Autowire the object. Later called the findAllTodos()
+        method and retrieved the List<ToDo> by passing hard coded username String and stored to a variable. 
+        passed todo List into ModelMapping method model. addAttributes ("todos",todos) and configured the same on JSP file 
+        too. Ran the same on server and got response on browser page. 
+
+Key   : LocalDate Type. LocalType.now().plusYear(1); Using addAttribute() from ModelMapping is recommended in Spring MVC 
+        rather then using put() to display message on view page. 
+
+
+Step 16 :
+
+Notes : Overview about Attribute Scope for [Request, Model, Session]. 
+        All Request sent from browser are handled by web application deployed on server.
+
+        Request Scope : Active for a single request ONLY
+        -> Once the response is sent back, the request attributes will be removed from memory. 
+        -> These can't be used for further requests.
+        -> Recommended for most use cases. 
+ 
+        Session Scope : Details stored across multiple requests/ 
+        -> Be careful about what you store in session (Takes additional memory as all details are stored on server)
+
+Key   : @SessionAttributes("value")
+
+
+Step 17 :
+
+Notes : Added JSTL dependency to Pom. xml file. Done some formatting on list-todo.jsp & welcome.jsp pages.
+
+Key   : None
+
+Step 18 : 
+
+Notes :  Added Bootstrap CSS framework version 5.1.3 and jQuery version 3.6.0 to pom.xml . Then copied qualified name from 
+         Maven Dependencies for Bootstrap , jQuery, JavaScript and added the qualified path to html JSP page. 
+
+Key   :  Dependency for Bootstrap CSS & jQuery
+
+                <dependency>
+		<groupId>org.webjars</groupId>
+		<artifactId>bootstrap</artifactId>
+		<version>5.1.3</version>
+	        </dependency>
+		
+		<dependency>
+		<groupId>org.webjars</groupId>
+		<artifactId>jquery</artifactId>
+		<version>3.6.0</version>
+		</dependency>
+ 
+         Qualified path name for web jars. 
+ 
+         -> webjars/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet
+         -> webjars/bootstrap/5.1.3/js/bootstrap.min.js
+         -> webjars/jquery/3.6.0/jquery.min.js
+
+         CSS framework URL should be added below <head> =>  
+         -> <link href="webjars/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+         Rest like jQuery and Java Script URL's should be added to above </body> close
+         -> <script src="webjars/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+         -> <script src="webjars/jquery/3.6.0/jquery.min.js"></script>
+
+
+Step 19 :
+
+Notes : Done some formatting to Todo list UI using Bootstrap CSS framework.  
+
+Key   : <div class = "container"> put entire table code inside </div> - Formatted the Table content to center.
+
+        <table class = "table"> - Boot strap library class to format table content in table format. 
+
+
+Step 20 :
+
+Notes : Added a button to redirect to a controller method @RequestMapping("add-Todo") which returns view page "todo". Then 
+        Created a description field on and submit button. Then created a separate Post method and named it as addAllTodos
+        and used "redirect:list-todos" just for now to display static ToDo List. 
+
+Key   : <a href = "file-name" class="btn btn-success">Button name</a> - This will create a button with nice background. 
+         return "redirect:filename" - this way we can Re-Rout to different controller method. 
+
+
+Step 21 : 
+
+Notes : Created a method in service class to create ToDo instance to add new ToDo list to the row. Created a post method 
+        and passed parameters add attributes then redirected to list-todos controller method. 
+
+Key   : None
+
+
+Step 22 : 
+
+Notes : Implemented command bean (Form backing object), it's called 2-Way binding(todo.jsp & ToDoController.java). Removed 
+        @RequestedParam type and placed (Todo todo). Then made adjustment on ToDo form by adding modelAttribute = "todo" in 
+        <form:form method="post" modelAttribute="todo">. Then Created a ToDo instance with default values and passed into 
+        the (ModelMap model) model.put("todo",todo). The Spring reads the form data and bind them into defaule object and 
+        inject that object into POST method ToDo todo type which then can used to call attributes to create and update new
+        to-do list.         
+
+Key   : <form:form method="post" modelAttribute="todo"> and <form:input type="text" path="description" required="required" 
+        /> and path = "hidden". 
+
+       Two way binding : Transferring data from bean to form and then form to bean. 
+
+
+Step 23 :
+
+Notes : Added Spring boot starter validation to POM.XML.  Implemented Command Bean(Form backing object)2-way binding
+        (todo.jsp & ToDoController.java). Added validation to Bean and Displayed Validation error in the view. 
+
+Key   : @Size (min = 10 message = "Enter at least 10 char") - Annotation to set validation for form field and to display 
+        error messages. 
+
+        @ModelAttribute("Type param name") - Annotation to tell spring which attribute to use for form binding. 
+
+        @Valid - Error Validation annotation to be annotated on Binding Type on method params. 
+
+        modelAttribute = "binding param name" - This needs to be added on form header. 
+ 
+        BindingResult - A type can be used to check persistence of validation errors. 
+
+
+Step 24 :
+
+Notes  : Implemented Delete To-Do feature
+
+Key    : None
+
+
+Step 25 & 26 :
+
+Notes  : Implemented Update To-do - Show Update Todo page & Saved changes to ToDo 
+
+Key    : None
+
+
+Step 27 :
+
+Note   : Added Target Date field to Todo JSP page. Resolved date picker dependencies for populating CSS styled date picker.
+
+Key    : None
+
+
+Step 28 :
+
+Note   : Added navigation bar and JSP fragments. 
+
+Key    : None
+
+
+Step 29 :
+
+Note   : Done code refactoring. 
+
+Key    : None
+
+
+Step 30  :
+
+Note   : Implemented Spring Security . New login page created and default username and password provided by spring. 
+
+Key    : None 
+
+
+Step 31  :
+
+Note   : Configured Password encoding. 
+
+Key    : @Bean
+	public InMemoryUserDetailsManager createUserDetailsManager() {
+		Function<String,String> passwordEncoder
+		= input -> passwordEncoder().encode(input) ;
+		
+		UserDetails userDetails = User.builder()
+				.passwordEncoder(passwordEncoder)
+				.username("user").
+				password("access")
+				.roles("USER", "ADMIN").
+				build();
+
+		return new InMemoryUserDetailsManager(userDetails);
+
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+
+Step 32  :
+
+Note   :  Done refactoring of hardcoded User ID 
+
+Key    :  None
+
+
+
+Step 33   :
+
+Note   :  Extracted user&password build as a method. Created 2 new UserDetails fields for new users and passed to 
+          InMemoryUserDetailsManager. Simply done setting up a new user for ToDo.
+
+Key    :  None
+
+
+
+Step  34  :
+
+Note   : Added JPA and h2-Console dependencies to POM.XML
+
+         Configured h2 database to spring boot project. 
+
+Key    :  Dependencies added 
+      
+          <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+
+Step 35   : Configured Spring Security to Get H2 Console working
+ 
+Note   : Any Http request will be first validated by this type SecurityFilterChain. 
+         By default :
+         All URLs are protected 
+         A login form is shown for unauthorized request.
+         
+         Things we overridden from SecurityFilterChain
+         CSRF
+         Frames
+         
+ 
+Key    : SecurityFilterChain Type - Define a filter chain matched against every request.
+         When we override SecurityFilterChain, we need to define entire chain again. 
+
+
+
+Step 36   :
+
+Note   :
+
+Key    : spring.jpa.defer-datasource-initialization=true this will prevent the h2 database initialization before Entities 
+         are loaded. Usually sql files will be loaded before Entities. 
+
+
+                                          Completed building To-Do web application
+___________________________________________________________________________________________________________________________
+
+
+REST API 
+
+Design -> Build -> Connect DB 
+
+Notes : Initialized Spring-boot-starter-web along with dependencies like Dev-Tools, H2-Database, Spring Data JPA.
+
+Notes :1️⃣ @RequestMapping(method = RequestMethod.GET, path = "/hello-world")
+       2️⃣ @RequestMapping(value = "/hello-world", method = RequestMethod.GET)
+
+* Both value & path serves same purpose and reason for similar type existance is for readbility preferences. 
+
+* No functional changes.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Created a simple hello world REST API. 
+
+New Annotation : @GetMapping("/URL") - A most specific method mapping annotation for GET request. 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Created an another hello world GET method and returned an instance which displayed as JSON response. 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Internal working request and response :
+
+1. Client make request from browser -> DispatcherServlet receive the request -> Map to Correct Controller method and call it -> Send the response from controller method back to client. 
+
+The dispatcherServlet know as FrontController manages the Http request & response lifeCycle in SpringBoot application. 
+
+
+2. How does the instance we return converted as JSON response ?
+
+Becasue of Spring boot autoConfiguration (@ResponseBody + JaksonHttpMessageConvertersConfiguration)
+
+
+3. Two main features of Spring boot ?
+
+Auto Configuration - Based on the details available on class path(POM.XML) the Springboot autoconfigure things. For example 
+
+if the class path has spring-boot-starter-web, Spring will automatically configure Tomcat server, AutoConfigure DispatcherServlet, Bean to JSON conversion and ErrorpageConfiguration etc. 
+
+Starter projects - The starter project brings in all the dependencies and spring autoconfiguration does reset of the magics based on the details available on class path. 
+---------------------------------------------------------------------------------------------------------------------------
+
+Path Variables : 
+
+* Path variable are values sent through URL and captured using @PathVariable to the method param for processing.
+
+Required annotation : 
+
+* @GetMapping(path = "/url/{name}")
+* @PathVariables
+
+Example :
+
+@GetMapping(path = "/hello-world-pathVariable/{name}")
+public HelloWorldBean helloWorldBean(@Pathvariable String name) {
+ return new HelloWorldBean("Hello World, %s",name);
+}
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Designing REST API for social media application 
+
+Users REST API :
+
+Retrieve all Users
+-> GET/Users
+
+Create a User
+-> POST/Users
+
+Retrieve one User
+-> GET/Users/{id}->/Users/1
+
+Delete a User
+-> DELETE/Users/{id}->/Users/1
+
+
+POSTS REST API 
+
+Retrieve all posts for a User
+-> GET/Users/{id}/posts
+
+Create a post for a User
+-> POST/User/{id}/posts
+
+Retrieve details of a post
+-> GET/User/{id}/posts/{post_id}
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Create User Bean and UserDaoService
+
+Created User class with id, description, birthDate.
+
+Created a Static Service class for storing User objects and a method to perform operations on them.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+created a GET method to find one User using pathvariable from the datasource. 
+
+@GetMapping("/users/{id}")
+	public User getUser(@PathVariable() int id) {
+		return service.findOne(id);
+	}
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Created a POST method to create a new User on DB and fired a POST request from Talend API tester as browser extension. 
+
+Received a JSON as Request body and bind it to the User object using @RequestBody annotation. 
+
+@PostMapping("/users")
+	public void createUser(@RequestBody User user) {
+		service.save(user);
+	}
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Enhancing POST Method to return correct HTTP Status Code and Location
+
+Returned the Current URI(Uniform resource Identifier) using -- 
+
+URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId).toUri();
+
+Returned response status as 201(Created code) using -- ResponseEntity.created(location).build();
+
+---------------------------------------------------------------------------------------------------------------------------
+Implementing Exception Handling - 404 Resource Not Found
+
+@ResponseStatus(code = HttpStatus.NOT_FOUND) 
+
+Created an exception class named NoUserFoundException() and used the above annotation for sending response code with custom message. 
+
+Then Set condition on getUserClass() like if returned value is null throw the exception NoUserFoundException().
+
+This approach successfully throwed exception as intended. 
+---------------------------------------------------------------------------------------------------------------------------
+
+Implementing Generic Exception Handling for all Resources
+
+Earlier we returned a 201 and 404 Not found error code through the exception class we've created. We saw that on API test console there was structured JSON body represent error details. That's a default error structure followed by Java. Like wise in this module we are going to create our custom structure for our error response body. 
+
+Here we are going to replicate the methodoligy used by Spring for formatting Error response body for our custom Exception.
+
+@ExceptionHandler(Exception.class) - This annotation define what kind of exception a method would handle. 
+
+@ControllerAdvice - A Specialization of @Controller, a generalized annotation makes a class defined to handle exceptions. Spring would use such class for structuring the error response body right ?
+
+-> I throwed a customized RumtimeException with a custom string message from my controller class.
+
+-> Then that Runtime Exceptiion has been caught by Spring framework and injected into my exception handler for customException defined inside the ControllerAdvice class. 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Implementing DELETE Method to delete a User Resource
+
+Implemented Delete method on Controller. 
+---------------------------------------------------------------------------------------------------------------------------
+
+Implementing Validation for REST API :
+
+Added validations constrains to User properties using @Size for minimum characters and @Past to prevent future date inputs.
+
+Customized the Exception response body by @Override handleMethodArgumentNotValid method from ResponseEntityExceptionHandler
+
+method and returned the ResponseEntity<Object>() with customized error format exception object as response back to client. 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+OverView of Advanced REST API features :
+
+-> Documentation 
+
+-> Content Negotiation 
+
+-> Internationalization - i18n
+
+-> Versioning 
+
+-> Static and Dynamic filtering 
+
+-> Monitoring 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Configuring Auto generation of Swagger Documentation :
+----------------------------------------------------
+
+springdoc-openapi java library helps to automate the generation of API documentation for spring boot projects. 
+
+<dependency>
+	<groupId>org.springdoc</groupId>
+	<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+	<version>2.7.0</version>
+</dependency>
+
+Openapi - specification provide the API definition for the REST API 
+
+Swagger - UI - Provides a Visual representation of our REST API. 
+
+URL - http://localhost:8080/swagger-ui.html
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Implementing Content Negotiation - Implementing Support for XML : 
+---------------------------------------------------------------
+
+ 
+Dependency :
+
+          <dependency>
+	      <groupId>com.fasterxml.jackson.dataformat</groupId>
+	      <artifactId>jackson-dataformat-xml</artifactId>
+          </dependency>
+
+Content nogitiation : When consumer wants a response in desired response-format like XML or JSON and resource content in 
+                      Specific language other english like dutch, french etc. By adding the dependency spring allows 
+                      Consumer to send their requirment from API test console by adding appropirate header on request body. 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Exploring Internationalization for REST API : 
+-------------------------------------------
+
+Create a messages.properties file under Src/main/resource for default. For other languages do the same with correct naming 
+Convention. Configured using custom source naming convention as - good.morning.message = Good morning. Same for others.
+
+Instantiated MessageSource messageSource; 
+
+Then create a Controller method and returned a content like the below. 
+
+Locale locale = LocaleContextHolder.getLocale();
+
+		return messageSource.getMessage("good.morning.message", null, "Default messages", locale);
+
+Now the consumer shall select the Header type "Accept-Language = en|fr|de|nl" to get different language response types.
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Versioning REST API - URI versioning
+------------------------------------
+
+Different ways to implement REST API versioning 
+
+-> URL - Create another version and End Point for the same on controller to versionaize REST API.
+
+-> Request Parameter - Just modify endpoint like @GetMapping(path = "/person", params = "version=v2") to return a version.
+
+-> Header - @GetMapping(path = "/person/header",headers = "X-API-VERSION=1") - Send Header Type X-API-VERSION and value =1.
+
+-> Media Type - @GetMapping(path = "/person/accept",produces = "application/v1+json") - Send Header "Type 
+                Accept"="application/v1+json"
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Implementig HATEOAS for REST API 
+--------------------------------
+
+HATEOAS - Hypermedia as the engine of application state 
+
+How to perform subsequent actions in web site ?
+
+* HATEOAS 
+
+Type of implementations :
+
+-> Custom format implementations 
+
+-> Using standard implementation - Spring HATEOAS 
+
+Added a dependency :
+
+                <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
+
+Need 2 Type inside a response controller method intended for adding hyperlinks. 
+
+EntityModel - To Wrap around Entity object like EntityModel<User>. Set it as return type. 
+
+WebMvcLinkBuilder - A Type to build link to attach with entity. 
+
+Implementation :
+
+[Do static import for WebMvcLinkBuilder to use it's methods]
+
+{
+
+EntityModel<User> entity = EntityModel.of(User);
+
+WebMvcLinkBuilder link = linkTo( methodOn(this.getClass()).retrieveAllUsers());
+ 
+entity.add(link.withRel("all-Users"));
+
+}
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Implementing Static Filtering for RESTAPI 
+-----------------------------------------
+
+@JsonProperty(value = "User_Name") - Can be annotated on fields to give custom names. The Json response adjusted accordingly.
+
+
+Static Filtering annotations and their use cases 
+
+-> @JsonIgnore - A Field level annotation used to filter a property on a bean on response. 
+
+-> @JsonIgnoreProperty - A class level annotation used to define a list of bean properties to be ignored. 
+
+
+Dynamic Filtering annotations and their use cases 
+
+-> @JsonFilter("somefilter") - Class level Annotation to connect to the controller methods which does filtering. 
+
+
+Implementation :
+
+@GetMapping("/users")
+	public MappingJacksonValue retrieveAllUsers() {
+
+		// Implemented Dynamic API filtering on listAllUsers controller method
+
+		MappingJacksonValue mapping = new MappingJacksonValue(service.findall());
+
+		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "description");
+
+		FilterProvider filters = new SimpleFilterProvider().addFilter("somefilter", filter);
+
+		mapping.setFilters(filters);
+
+		return mapping;
+
+	}
+
+Key note : The value of JsonFilter("value") should match the filter String on addFilter()
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Monitoring API's with Spring boot actuator :
+
+Had an overview about Spring boot Actuator monitoring framework. 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Created some other endpoints to manage operation on Posts for User class.
+
+No new things used except some annotations like @ManyToOne and @OneToMany. Both are used to make a relation ship between two entities, so JPA and hibernate can perform cascading operation amoung them without manual efforts. 
+---------------------------------------------------------------------------------------------------------------------------
+
+So, yeah. At last completed Spring & Spring boot basics and intermediate level concepts along with REST API concepts and building. 
+
+                                                    REST API Completed!
+---------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+ 

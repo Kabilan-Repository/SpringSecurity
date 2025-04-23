@@ -1,0 +1,42 @@
+Spring Security :
+
+
+Agenda :
+
+-> Introduction about Spring Security framework 
+
+-> Securing a web application using static credentials 
+
+-> Important Annotations, interfaces, classes for Spring security 
+
+-> How to set Authentication & Authoraization for web apps.
+
+
+Advance Spring Security Concepts :
+--------------------------------
+
+-> Implementing role based access mechanism using ROLES, AUTHORITIES
+
+-> Different strategies that spring security provides when coming to password.
+
+-> How to implement Method Level Security using Spring Security 
+
+-> How to prevent common attacks like CORS, CSRF using Spring Security. 
+
+-> Deep dive on JWT & it's role in Authentication & Authorization 
+
+-> Deep dive on OAUTH2, OpenID & securing a web application using the same. 
+
+-> Exploring Authorization servers like Keylock and Spring authorization framework.
+
+-> Important Spring Security topics like Hashing, Tokens and many more.
+
+___________________________________________________________________________________________________________________________
+
+
+
+
+
+
+
+
